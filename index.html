@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zenith</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-cool">
+
+<div class="container">
+    <nav class="tabs">
+        <div class="tab active" onclick="switchTab('alarm-view', this)">Alarm</div>
+        <div class="tab" onclick="switchTab('tomato-view', this)">Pomodoro</div>
+        <div class="tab" onclick="switchTab('reminder-view', this)">Reminder</div>
+        <div class="tab" onclick="switchTab('world-view', this)">World</div>
+        <div class="tab" onclick="switchTab('weather-view', this)">Weather</div>
+    </nav>
+
+    <div id="alarm-view" class="view active">
+        <div class="display-date" id="main-date">Loading...</div>
+        <div class="display-time" id="main-clock">00:00:00</div>
+        
+        <div class="picker-group">
+            <select id="alarm-h" onchange="updateAlarmLabels()"></select>
+            <span class="colon">:</span>
+            <select id="alarm-m"></select>
+            <span class="colon">:</span>
+            <select id="alarm-s"></select>
+        </div>
+        <div style="margin-bottom: 1.5rem; padding: 0 5px;">
+            <label style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block;">Select Alert Sound</label>
+            <select id="alarm-ringtone" class="full-select" style="margin-bottom: 0;">
+                <option value="music/flutie8211-triple-high-pitch-electronic-beeps-486292.mp3">01. Beep</option>
+                <option value="music/soundreality-telephone-ring-129620.mp3">02. Telephone ring</option>
+                <option value="music/freesound_community-digital-watch-alarm-81203.mp3">03. Watch Alarm</option>
+                <option value="music/freesound_community-success-48018.mp3">04. Success</option>
+                <option value="music/diff_style-robot-talk-344757.mp3">05. Robot</option>
+                <option value="music/emg5991-school-bell-310293.mp3">06. School Bell</option>
+                <option value="music/freesound_community-cyber-laser-84916.mp3">07. Laser</option>
+                <option value="music/royalty_free_music-soft-piano-100-bpm-121529.mp3">08. Soft Piano</option>
+                <option value="music/dragon-studio-car-honk-386166.mp3">09. Car Honk</option>
+                <option value="music/dragon-studio-drum-beat-loopable-443143.mp3">10. Drum Beat</option>
+            </select>
+        </div>
+        <button id="set-alarm-btn" class="btn-primary" onclick="setAlarm()">Set Alarm</button>
+        <button id="cancel-alarm-btn" class="btn-secondary" style="display: none; border-color: #ef4444; color: #ef4444;" onclick="cancelAlarm()">Cancel Alarm</button>
+        <button id="stop-alarm-btn" class="btn-primary stop-style" style="display: none; background: #ef4444;" onclick="stopRinging('alarm')">STOP & WITNESS</button>
+        
+        <p id="alarm-advice"></p>
+        <p id="alarm-status"></p>
+    </div>
+
+    <div id="tomato-view" class="view">
+        <div class="display-time" id="tomato-display" style="margin-bottom: 0.5rem;">00:00:00</div>
+        
+        <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+            <button class="btn-secondary" style="margin:0; width: auto; padding: 6px 16px; border-radius: 20px; font-size: 0.75rem;" onclick="toggleAdvancedTomato()">⚙️ Advanced Timeline</button>
+        </div>
+
+        <div id="normal-tomato-section">
+            <div class="picker-group">
+                <select id="tomato-h"></select>
+                <span class="colon">:</span>
+                <select id="tomato-m"></select>
+                <span class="colon">:</span>
+                <select id="tomato-s"></select>
+            </div>
+        </div>
+
+        <div id="advanced-tomato-section" style="display: none; flex-direction: column; gap: 10px; margin-bottom: 1.5rem;">
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="timeline-name" class="custom-input" placeholder="Phase (e.g. Work)" style="flex: 2; padding: 10px; font-size: 0.85rem;">
+                <input type="number" id="timeline-mins" class="custom-input" placeholder="Mins" style="flex: 1; padding: 10px; font-size: 0.85rem;" min="1">
+                <button class="btn-primary" style="width: auto; padding: 10px 16px; border-radius: 12px; margin: 0;" onclick="addTimelineItem()">+</button>
+            </div>
+            <div id="tomato-timeline-list" style="max-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;"></div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem; padding: 0 5px;">
+            <label style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; display: block;">Select Alert Sound</label>
+            <select id="tomato-ringtone" class="full-select" style="margin-bottom: 0;">
+                <option value="music/flutie8211-triple-high-pitch-electronic-beeps-486292.mp3">01.Beep</option>
+                <option value="music/soundreality-telephone-ring-129620.mp3">02. Telephone ring</option>
+                <option value="music/freesound_community-digital-watch-alarm-81203.mp3">03. Watch Alarm</option>
+                <option value="music/freesound_community-success-48018.mp3">04. Success</option>
+                <option value="music/diff_style-robot-talk-344757.mp3">05. Robot</option>
+                <option value="music/emg5991-school-bell-310293.mp3">06. School Bell</option>
+                <option value="music/freesound_community-cyber-laser-84916.mp3">07. Laser</option>
+                <option value="music/royalty_free_music-soft-piano-100-bpm-121529.mp3">08. Soft Piano</option>
+                <option value="music/dragon-studio-car-honk-386166.mp3">09. Car Honk</option>
+                <option value="music/dragon-studio-drum-beat-loopable-443143.mp3">10. Drum Beat</option>
+            </select>
+        </div>
+        <button id="tomato-btn" class="btn-primary" onclick="toggleTomato()">Start Session</button>
+        <button id="tomato-reset-btn" class="btn-secondary" onclick="resetTomato()">Reset</button>
+        <button id="stop-tomato-btn" class="btn-primary stop-style" style="display: none; background: #ef4444;" onclick="stopRinging('tomato')">STOP & REST</button>
+    </div>
+
+    <div id="reminder-view" class="view">
+        <div class="reminder-layout">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button class="cal-btn" onclick="changeMonth(-1)">❮</button>
+                    <div style="display: flex; gap: 5px; align-items: center;">
+                        <select id="cal-month-select" class="cal-select" onchange="jumpToDate()"></select>
+                        <select id="cal-year-select" class="cal-select" onchange="jumpToDate()"></select>
+                    </div>
+                    <button class="cal-btn" onclick="changeMonth(1)">❯</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+
+            <div class="picker-group" style="margin-bottom: 0;">
+                <select id="remind-h"></select>
+                <span class="colon">:</span>
+                <select id="remind-m"></select>
+                <select id="remind-ampm" style="margin-left: 10px; width: 80px; flex: none;">
+                    <option value="AM">AM</option>
+                    <option value="PM">PM</option>
+                </select>
+            </div>
+            
+            <input type="text" id="remind-input" placeholder="What needs to be reminded?" class="custom-input">
+            
+            <div class="color-panel-wrapper">
+                <label class="section-label">Select tag & Define its meaning:</label>
+                <div id="color-palette-container" class="color-palette-container"></div>
+            </div>
+            
+            <button id="add-reminder-btn" class="btn-primary" onclick="addReminder()">Add Schedule Reminder</button>
+            <button id="stop-reminder-btn" class="btn-primary stop-style" style="display: none; background: #ef4444;" onclick="stopRinging('reminder')">STOP REMINDER</button>
+            
+            <input type="text" id="reminder-search" class="custom-input" placeholder="🔍 Search tasks, tags or dates..." oninput="saveAndRenderReminders()" style="margin-top: 1rem;">
+            
+            <div id="reminder-list" class="reminder-list-container"></div>
+        </div>
+    </div>
+
+    <div id="world-view" class="view">
+        <div class="clock-toggle-group">
+            <button class="btn-secondary active-toggle" id="btn-digital" onclick="setClockType('digital')">Digital</button>
+            <button class="btn-secondary" id="btn-analog" onclick="setClockType('analog')">Analog</button>
+        </div>
+
+        <div id="digital-clock-container">
+            <div class="display-time" id="world-time">00:00:00</div>
+        </div>
+        <div id="analog-clock-container" style="display: none; justify-content: center; align-items: center; margin: 1.5rem 0;">
+            <div class="analog-clock">
+                <div class="hand hour-hand" id="analog-hour"></div>
+                <div class="hand min-hand" id="analog-min"></div>
+                <div class="hand sec-hand" id="analog-sec"></div>
+                <div class="clock-center"></div>
+            </div>
+        </div>
+
+        <input type="text" id="tz-search" class="custom-input" placeholder="🔍 Search city (e.g. Tokyo)..." oninput="filterTimezones()" style="margin-bottom: 10px;">
+
+        <div class="picker-group" style="margin-bottom: 0;">
+            <select id="tz-select" class="custom-input" style="flex: 1; padding: 12px; margin-bottom: 0;">
+            </select>
+            <button class="btn-secondary" style="margin-top: 0; padding: 12px; width: auto; font-weight: bold; border-color: var(--dynamic-accent); color: var(--dynamic-accent); background: rgba(0,0,0,0.3);" onclick="document.getElementById('tz-search').value=''; filterTimezones(); document.getElementById('tz-select').value='local';">📍 Local</button>
+        </div>
+    </div>
+
+    <div id="weather-view" class="view">
+        <div class="sky-stage">
+            <div id="weather-background">
+                <div class="sun-wrapper sun-rise-active" id="rising-sun">
+                    <div class="sun">
+                        <span id="temp">--°</span>
+                        <small id="condition">Loading</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <input type="text" id="weather-search" class="custom-input" placeholder="🔍 Search city (e.g. London)..." oninput="filterWeatherCities()" style="margin-bottom: 10px;">
+        
+        <div class="picker-group" style="margin-bottom: 0;">
+            <select id="weather-city-select" class="custom-input" style="flex: 1; padding: 12px; margin-bottom: 0;" onchange="getWeather()">
+            </select>
+            <button class="btn-secondary" style="margin-top: 0; padding: 12px; width: auto; font-weight: bold; border-color: var(--dynamic-accent); color: var(--dynamic-accent); background: rgba(0,0,0,0.3);" onclick="document.getElementById('weather-search').value=''; filterWeatherCities(); document.getElementById('weather-city-select').value='local'; getWeather('local');">📍 Local</button>
+        </div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
